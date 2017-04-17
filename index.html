@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- 
+    Author: Mateus Nascimento
+    Email: mateus.nnascimento.s@gmail.com
+-->
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8"/>
+        <!--Informa ao navegador que o sistema suporta dispositivos mobile -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Contador ACSO</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="images/favicon.ico" type="image/x-icon">        
+        <!--estilização interna-->
+        <link rel="stylesheet" href="css/estilo.css"/>
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        <!--scripts-->
+        <script rel="javascript" src="libraries/p5.js"> </script>
+        <script rel="javascript" src="libraries/p5.dom.js"> </script>
+        <script rel="javascript" src="libraries/p5.sound.js"> </script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="libraries/materialize.min.js"></script>
+        <script rel="javascript" src="scripts/home.js"> </script>        
+    </head>
+    <body>
+        <header>
+            <a href="#"><img id="logo" src="images/logo.png"/></a>
+        </header>
+        <main>
+            <div id="btn-floating" class="fixed-action-btn horizontal">
+                <a class="btn-floating btn-large red accent-4">
+                    <i class="large material-icons">mode_edit</i>
+                </a>
+                <ul>
+                    <li onclick="showCard('secundario')"><a class="btn-floating indigo accent-4" ><i class="material-icons">add</i></a></li>
+                    <li onclick="showCard('date')"><a class="btn-floating indigo accent-4" ><i class="material-icons">schedule</i></a></li>
+                    <li onclick="showCard('file')"><a class="btn-floating indigo accent-4"><i class="material-icons">attach_file</i></a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <div id="banner1"></div>
+                <div id="content1">
+                    <h1 id="time_val_1">0 dias <br/> 00:00:00</h1>
+                </div>
+            </div>
+            <div id="secundario" class="card">
+                <div class="left hide-on-med-and-down">
+                    <div id="banner2"></div>
+                </div>
+                <div id="content2">
+                    <h1 id="time_val_2">0 dias</h1>
+                </div>
+            </div>
+            <div id="date" class="card edit">     
+                    <h1>Editar Data</h1>
+                    <p>
+                        <input name="group1" type="radio" id="test1" checked/>
+                        <label for="test1">Competição Principal</label>
+                    </p>
+                    <p>
+                        <input name="group1" type="radio" id="test2" />
+                        <label for="test2">Competição Secundária</label>
+                    </p>
+                <label for="selectData">Selecione uma Data</label>
+                    <input id="selectData" type="date" class="datepicker"> 
+                    <div id="btn-submit" onclick="updateDate()">
+                        <button class="btn waves-effect waves-light red accent-4" type="submit">Guardar
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                
+            </div>   
+            <div id="file" class="card edit">
+                <h1>Editar Imagem</h1>
+                <p>
+                    <input name="group2" type="radio" id="test3" checked/>
+                    <label for="test3">Competição Principal</label>
+                </p>
+                <p>
+                    <input name="group2" type="radio" id="test4" />
+                    <label for="test4">Competição Secundária</label>
+                </p>
+                <div class="file-field input-field">
+                    <div class="btn red accent-4">
+                        <span>Arquivo</span>
+                        <input type="file" id="imgFile">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
+                <div id="btn-submit" onclick="showCard('file')">
+                    <button class="btn waves-effect waves-light red accent-4" type="submit">Fechar
+                        <i class="material-icons right">not_interested</i>
+                    </button>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <a href="https://portal.uneb.br/"><img class="footer_logo" src="images/uneb_logo.png"/></a>
+            <a href="http://acso.uneb.br/"><img class="footer_logo" src="images/logo.png"/></a>
+        </footer>
+    </body>
+</html>

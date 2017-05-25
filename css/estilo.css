@@ -51,7 +51,7 @@ main {
     display: block;
     padding: 120px 0px 20px 30px;
     box-shadow: 0px 2px 0px rgba(196, 31, 69, .5);
-    background: url(../images/banner.png) no-repeat;
+    background: url(../images/banner1.png) no-repeat;
     background-position: right;
     background-size:cover;
 }
@@ -77,7 +77,7 @@ main {
     display: block;
     padding: 100px 350px 0px 0px;
     box-shadow: 1px 0px 0px rgba(196, 31, 69, .5);
-    background: url(../images/banner.png) no-repeat;
+    background: url(../images/banner2.png) no-repeat;
     background-position: right;
     background-size:cover;
 }

@@ -6,6 +6,7 @@
 body {
     background: url(../images/background.jpg) no-repeat;
     background-position: right;
+    background-attachment: fixed;
 }
 
 div .div {

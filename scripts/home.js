@@ -118,9 +118,9 @@ function getDifferenceDate(troca) {
         stop = true;
     }
     
-    if (parseInt(hours)   <== 0 &&
-        parseInt(minutes) <== 0 &&
-        parseInt(seconds) <== 0    ) 
+    if (parseInt(hours)   <= 0 &&
+        parseInt(minutes) <= 0 &&
+        parseInt(seconds) <= 0    ) 
     {
         if (stop) {
             if (troca == principal) {

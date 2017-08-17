@@ -22,6 +22,7 @@
         <script rel="javascript" src="libraries/p5.sound.js"> </script>
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="libraries/materialize.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
         <script rel="javascript" src="scripts/home.js"> </script>        
     </head>
     <body>
@@ -29,7 +30,7 @@
             <a href="#"><img id="logo" src="images/logo.png"/></a>
         </header>
         <main>
-            <div id="btn-floating" class="fixed-action-btn horizontal">
+            <!--<div id="btn-floating" class="fixed-action-btn horizontal">
                 <a class="btn-floating btn-large red accent-4">
                     <i class="large material-icons">mode_edit</i>
                 </a>
@@ -38,11 +39,11 @@
                     <li onclick="showCard('date')"><a class="btn-floating indigo accent-4" ><i class="material-icons">schedule</i></a></li>
                     <li onclick="showCard('file')"><a class="btn-floating indigo accent-4"><i class="material-icons">attach_file</i></a></li>
                 </ul>
-            </div>
-            <div class="card">
+            </div>-->
+            <div id="principal" class="card">
                 <div id="banner1"></div>
                 <div id="content1">
-                    <h1 id="time_val_1">0 dias <br/> 00:00:00</h1>
+                    <h1 id="timer_princ">0 dias <br/> 00:00:00</h1>
                 </div>
             </div>
             <div id="secundario" class="card">
@@ -50,7 +51,7 @@
                     <div id="banner2"></div>
                 </div>
                 <div id="content2">
-                    <h1 id="time_val_2">0 dias</h1>
+                    <h1 id="timer_secund">0 dias</h1>
                 </div>
             </div>
             <div id="date" class="card edit">     

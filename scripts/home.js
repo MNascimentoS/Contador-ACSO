@@ -3,34 +3,78 @@
     Email: mateus.nnascimento.s@gmail.com
 */
 
-var timer = {
-    timer1: "",
-    timer2: ""
+/*Firebase Values*/
+var config = {
+    apiKey: "AIzaSyBW27GDGcsKiadK5sFMHrW6uJLEC1RhpVI",
+    authDomain: "contador-do-acso.firebaseapp.com",
+    databaseURL: "https://contador-do-acso.firebaseio.com",
+    projectId: "contador-do-acso",
+    storageBucket: "contador-do-acso.appspot.com",
+    messagingSenderId: "597706440559"
 };
-var currentdate;
-var interdate;
-var finalDate = {
-    setedPrinc: false,
-    principal:  "",
-    setedSecun: false,
-    secundario: ""
+
+/*Principal Variables*/
+var timers = [];
+timers["main"] = {
+    main: "",
+    date: "",
+    name:  "",
+    picture:  "",
+    timer_val: "",
+    abbreviation: ""
 };
-var count;
-var interval;
-const principal  = 0;
-const secundario = 1;
+timers["secondary"] = {
+    main: "",
+    date: "",
+    name:  "",
+    picture:  "",
+    timer_val: "",
+    abbreviation: ""
+};
+var currentdate, interval;
+var storageRef;
 
 function setup() {
     noCanvas();
-    count = 0;
-    timer.timer1   = select('#time_val_1');
-    timer.timer2   = select('#time_val_2');
-    var setedParams = setupParams();
-    setupCurrentDate();
-    if (setedParams) interval = setInterval(timeIt, 1000);
+    firebase.initializeApp(config);
+    updateCurrentDate();
+    firebase.database().ref().child('/competicoes').on("value", function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+            if (childSnapshot.val().main   == true) {
+                timers["main"].main         = childSnapshot.val().main;
+                timers["main"].timer_val    = select('#timer_princ');
+                timers["main"].name         = childSnapshot.val().name;
+                timers["main"].abbreviation = childSnapshot.val().abbreviation;
+                timers["main"].picture      = childSnapshot.val().picture;
+                timers["main"].date         = new Date();;
+                timers["main"].date.setDate(childSnapshot.val().day);
+                timers["main"].date.setMonth(childSnapshot.val().month);
+                timers["main"].date.setYear(childSnapshot.val().year);
+                timers["main"].date.setSeconds(60);
+                timers["main"].date.setMinutes(60);
+                timers["main"].date.setHours(24);
+            } else {
+                timers["secondary"].main         = childSnapshot.val().main;
+                timers["secondary"].timer_val    = select('#timer_secund');
+                timers["secondary"].name         = childSnapshot.val().name;
+                timers["secondary"].abbreviation = childSnapshot.val().abbreviation;
+                timers["secondary"].picture      = childSnapshot.val().picture;
+                timers["secondary"].date         = new Date();;
+                timers["secondary"].date.setDate(childSnapshot.val().day);
+                timers["secondary"].date.setMonth(childSnapshot.val().month);
+                timers["secondary"].date.setYear(childSnapshot.val().year);
+                timers["secondary"].date.setSeconds(60);
+                timers["secondary"].date.setMinutes(60);
+                timers["secondary"].date.setHours(24);
+            }
+        });
+        retieveImage(timers["main"].picture, "banner1");
+        retieveImage(timers["secondary"].picture, "banner2");
+        interval = setInterval(timeIt, 1000);
+    });
     $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15,    // Creates a dropdown of 15 years to control year
+        selectMonths: true,
+        selectYears: 15,
         labelMonthNext: 'Próximo mês',
         labelMonthPrev: 'Mês Anterior',
         labelMonthSelect: 'Selecione um mês',
@@ -44,45 +88,19 @@ function setup() {
         clear: 'Limpar',
         close: 'Fechar'
     });
-    document.getElementById('date').style.display = 'none';
-    document.getElementById('file').style.display = 'none';
-    document.getElementById('secundario').style.display = 'none';
-    $('#imgFile').change(function(){
-        var radio = getRadioValue('group2');
-        if (radio.num == principal) {
-            readURL(this, 'banner1');
-        } else {
-            readURL(this, 'banner2');
-        }
+}
+
+function retieveImage(imageUri, imageEl){
+    storageRef = firebase.storage().ref();
+    firebase.storage().ref().child(imageUri).getMetadata().then(function(metadata) {
+        document.getElementById(imageEl).style.background = "url('" + metadata.downloadURLs[0] + "') no-repeat";
+        document.getElementById(imageEl).style.display = "block";
+        document.getElementById(imageEl).style.backgroundPosition = "right";
+        document.getElementById(imageEl).style.backgroundSize = "cover";
+      console.log("URL is "+metadata.downloadURLs[0]);
+    }).catch(function(error){
+      console.log("error downloading "+error);
     });
-}
-
-function setupParams() {
-    var params = getURLParams();
-    if ( params.day   &&
-         params.month &&
-         params.year     ) 
-    {
-        finalDate.principal = new Date();
-        finalDate.principal.setDate(params.day-1);
-        finalDate.principal.setMonth(params.month);
-        finalDate.principal.setYear(params.year);
-        finalDate.principal.setSeconds(60);
-        finalDate.principal.setMinutes(60);
-        finalDate.principal.setHours(24);
-        return true;
-    }
-    return false;
-}
-
-function setupCurrentDate() {
-    currentdate = new Date();
-    currentdate.setMonth(currentdate.getMonth()+1);
-    interdate   = new Date();
-    interdate.setMonth(interdate.getMonth()+1);
-    interdate.setSeconds(60);
-    interdate.setMinutes(60);
-    interdate.setHours(24);
 }
 
 function updateCurrentDate() {
@@ -90,55 +108,30 @@ function updateCurrentDate() {
     currentdate.setMonth(currentdate.getMonth()+1);
 }
 
-function updateInterDate() {
-    interdate = new Date();
-    interdate.setMonth(interdate.getMonth()+1);
-    interdate.setSeconds(60);
-    interdate.setMinutes(60);
-    interdate.setHours(24);
-}
-
 function timeIt() {
-    if (finalDate.setedPrinc) getDifferenceDate(principal);
-    if (finalDate.setedSecun) getDifferenceDate(secundario);
+    var update1, update2;
+    update1 = getDifferenceDate(timers["main"]);
+    update2 = getDifferenceDate(timers["secondary"]);
+    if (!update1 && !update2) {
+        clearInterval(interval);
+    }
     updateCurrentDate();
 }
 
-function getDifferenceDate(troca) {
-    var day;
-    if (troca == principal) day = Math.round((finalDate.principal  - currentdate)/(24*60*60*1000)) - count;
-    else                    day = Math.round((finalDate.secundario - currentdate)/(24*60*60*1000)) - count;
-    //Interative
-    var totalSeconds = Math.round((interdate-currentdate)/1000);
+function getDifferenceDate(timer) {
+    var day = Math.round((timer.date - currentdate) / (24*60*60*1000));
+    if (day <= 0) {
+        if (timer.main == true) document.getElementById('principal').style.display = 'none';
+        else document.getElementById('secundario').style.display = 'none';
+        return false;
+    }
+    var totalSeconds = Math.round((timer.date-currentdate)/1000);
     var hours   = convertHours(totalSeconds);
     var minutes = convertMinutes(totalSeconds);
     var seconds = convertSeconds(totalSeconds);
-    var stop;
-    if (parseInt(day) === 0) {
-        stop = true;
-    }
-    
-    if (parseInt(hours)   <= 0 &&
-        parseInt(minutes) <= 0 &&
-        parseInt(seconds) <= 0    ) 
-    {
-        if (stop) {
-            if (troca == principal) {
-                finalDate.setedPrinc(false);
-                timer.timer1.html(0 + " dias" + "</br>" + nf(0, 2) + ":" +  nf(0, 2) + ":" +  nf(0, 2));
-            } else {
-                finalDate.setedSecun(false);
-                timer.timer2.html(0 + " dias");
-            }
-            stop = false;
-        }
-        count++;
-        updateCurrentDate();
-        updateInterDate();
-    }
-    
-    if (troca == principal) timer.timer1.html(day + " dias" + "</br>" + nf(hours, 2) + ":" +  nf(minutes, 2) + ":" +  nf(seconds, 2));
-    else                    timer.timer2.html(day + " dias");
+    if (timer.main == true) timer.timer_val.html(day + " dias" + "</br>" + nf(hours, 2) + ":" +  nf(minutes, 2) + ":" +  nf(seconds, 2));
+    else                    timer.timer_val.html(day + " dias");
+    return true;
 }
 
 function convertSeconds(seconds) {
